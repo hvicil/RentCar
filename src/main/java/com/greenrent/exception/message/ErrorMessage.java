@@ -20,6 +20,9 @@ public class ErrorMessage {
      public final static String CAR_NOT_AVAILABLE_MESSAGE="Car is not available for selected time";
 
 
+     public final static String EXCEL_REPORT_CREATION_ERROR_MESSSAGE="Error occured while generation excel report";
+
+
 
 
 

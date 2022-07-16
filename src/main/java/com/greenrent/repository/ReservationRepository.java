@@ -18,7 +18,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     Optional<ReservationDTO> findDTOById(Long id);
 
-    List<ReservationDTO> findAllByUserId(User user);
+    List<ReservationDTO> findAllByUserId(User userId);
+
+    Optional<ReservationDTO> findByIdAndUserId(Long id,User user);
+
 
 
     @Query("SELECT r FROM Reservation r "

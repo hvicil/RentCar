@@ -53,7 +53,14 @@ public class ReservationService {
         return reservationRepository.findAllByUserId(user);
     }
 
+    public ReservationDTO findByIdAndUserId(Long id, Long userId) {
+        User user=userRepository.findById(userId).orElseThrow(()->
+                new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE, userId)));
 
+        return reservationRepository.findByIdAndUserId(id, user).orElseThrow(()->new
+                ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE,id)));
+
+    }
 
     public void createReservation
             (ReservationRequest reservationRequest, Long userId,Long carId) {
@@ -77,10 +84,18 @@ public class ReservationService {
         reservation.setCarId(car);
         reservation.setUserId(user);
 
-        Double totalPrice = getTotalPrice(car, reservation.getPickUpTime(), reservation.getDropOffTime());
+        Double totalPrice = getTotalPrice(carId, reservation.getPickUpTime(), reservation.getDropOffTime());
         reservation.setTotalPrice(totalPrice);
 
         reservationRepository.save(reservation);
+    }
+
+    public void removeById(Long id){
+        boolean exist=reservationRepository.existsById(id);
+        if (!exist){
+            throw  new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE,id));
+        }
+        reservationRepository.deleteById(id);
     }
 
     public void updateReservation(Long reservationId, Long carId, ReservationUpdateRequest reservationUpdateRequest) {
@@ -105,7 +120,7 @@ public class ReservationService {
         }
 
 
-        Double totalPrice = getTotalPrice(car, reservationUpdateRequest.getPickUpTime(), reservationUpdateRequest.getDropOffTime());
+        Double totalPrice = getTotalPrice(carId, reservationUpdateRequest.getPickUpTime(), reservationUpdateRequest.getDropOffTime());
 
         reservation.setTotalPrice(totalPrice);
 
@@ -123,7 +138,8 @@ public class ReservationService {
 
 
 
-    private Double getTotalPrice(Car car, LocalDateTime pickUpTime, LocalDateTime dropffTime) {
+    public Double getTotalPrice(Long carId, LocalDateTime pickUpTime, LocalDateTime dropffTime) {
+        Car car= carRepository.findById(carId).orElseThrow(()-> new ResourceNotFoundException(String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE,carId)));
         Long hours= (new Reservation()).getTotalHours(pickUpTime, dropffTime);
         return car.getPricePerHour()*hours;
     }

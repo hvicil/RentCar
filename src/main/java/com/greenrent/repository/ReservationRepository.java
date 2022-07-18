@@ -1,5 +1,6 @@
 package com.greenrent.repository;
 
+import com.greenrent.domain.Car;
 import com.greenrent.domain.Reservation;
 import com.greenrent.domain.User;
 import com.greenrent.domain.enums.ReservationStatus;
@@ -13,6 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+
+    boolean existsByCarId(Car car);
+
+    boolean existsByUserId(User user);
 
     List<ReservationDTO> findAllBy();
 

@@ -20,7 +20,12 @@ public class ErrorMessage {
      public final static String CAR_NOT_AVAILABLE_MESSAGE="Car is not available for selected time";
 
 
-     public final static String EXCEL_REPORT_CREATION_ERROR_MESSSAGE="Error occured while generation excel report";
+     public final static String EXCEL_REPORT_CREATION_ERROR_MESSAGE="Error occured while generation excel report";
+
+
+     public final static String CAR_USED_BY_RESERVATION_MESSAGE="Car couldnt be deleted. Car is used by a reservation";
+
+     public final static String USER_USED_BY_RESERVATION_MESSAGE="User couldnt be deleted. User is used by a reservation";
 
 
 

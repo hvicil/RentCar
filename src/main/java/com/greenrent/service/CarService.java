@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.greenrent.exception.BadRequestException;
+import com.greenrent.repository.ReservationRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,8 @@ public class CarService {
     private CarMapper carMapper;
 
     private ImageFileRepository imageFileRepository;
+
+    private ReservationRepository reservationRepository;
 
     @Transactional(readOnly = true)
     public List<CarDTO> getAllCars(){
@@ -97,6 +100,12 @@ public class CarService {
         Car car=carRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException
                         (String.format(ErrorMessage.RESOURCE_NOT_FOUND_MESSAGE,id)));
+
+        boolean exists=reservationRepository.existsByCarId(car);
+        if (exists){
+            throw new BadRequestException(ErrorMessage.CAR_USED_BY_RESERVATION_MESSAGE);
+        }
+
 
         if(car.getBuiltIn()) {
             throw new BadRequestException(ErrorMessage.NOT_PERMITTED_METHOD_MESSAGE);
